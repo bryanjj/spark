@@ -130,4 +130,19 @@ class DataFrameStatSuite extends SparkFunSuite  {
     val items2 = singleColResults.collect().head
     items2.getSeq[Double](0) should contain (-1.0)
   }
+
+  test("test similarity") {
+    val rows = (2 to 4).map(x => Seq.tabulate(10) { i =>
+      if (i % x == 0) (1, toLetter(1), -1.0) else (i, toLetter(i), i * -1.0)
+    })
+
+    val df1 = rows(0).toDF("numbers", "letters", "negDoubles")
+    val df2 = rows(1).toDF("numbers", "letters", "negDoubles")
+    val df3 = rows(2).toDF("numbers", "letters", "negDoubles")
+
+    //df1.stat.jacardSimilarity(df1) should equal (1.0)
+    df1.stat.approxSimilarity(df1) should equal (1.0)
+    df1.stat.approxSimilarity(df2) should equal (df1.stat.jacardSimilarity(df2))
+
+  }
 }

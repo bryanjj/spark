@@ -166,4 +166,23 @@ final class DataFrameStatFunctions private[sql](df: DataFrame) {
   def freqItems(cols: Seq[String]): DataFrame = {
     FrequentItems.singlePassFreqItems(df, cols, 0.01)
   }
+
+  def approxSimilarity(otherDf: DataFrame, expectedError: Double = .05) : Double = {
+    MinHash.minHashSimilarity(df, otherDf, expectedError)
+  }
+
+  def jacardSimilarity(otherDf: DataFrame) = {
+    val intersectLen = df.intersect(otherDf).count
+    val unionLen = df.unionAll(otherDf).count
+
+    df.show()
+    otherDf.show()
+
+    df.intersect(otherDf).show()
+    df.unionAll(otherDf).show()
+
+
+    intersectLen.toDouble / (unionLen - intersectLen)
+  }
+
 }
