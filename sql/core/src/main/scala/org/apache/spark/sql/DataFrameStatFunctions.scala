@@ -167,22 +167,14 @@ final class DataFrameStatFunctions private[sql](df: DataFrame) {
     FrequentItems.singlePassFreqItems(df, cols, 0.01)
   }
 
-  def approxSimilarity(otherDf: DataFrame, expectedError: Double = .05) : Double = {
+  /**
+   * get the approximate jaccard similarity between this dataframe and another dataframe.
+   * @param otherDf the dataframe to compare
+   * @param expectedError the expected error in the similarity. between 0.0 and 1.0
+   * @return the similairy between 0.0 and 1.0, where 0.0 is completely different, and 1.0 is exactly the same
+   */
+  def approxSimilarity(otherDf: DataFrame, expectedError: Double) : Double = {
     MinHash.minHashSimilarity(df, otherDf, expectedError)
-  }
-
-  def jacardSimilarity(otherDf: DataFrame) = {
-    val intersectLen = df.intersect(otherDf).count
-    val unionLen = df.unionAll(otherDf).count
-
-    df.show()
-    otherDf.show()
-
-    df.intersect(otherDf).show()
-    df.unionAll(otherDf).show()
-
-
-    intersectLen.toDouble / (unionLen - intersectLen)
   }
 
 }
