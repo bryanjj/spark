@@ -131,7 +131,7 @@ class DataFrameStatSuite extends SparkFunSuite  {
     items2.getSeq[Double](0) should contain (-1.0)
   }
 
-  test("test similarity") {
+  test("test approx `similarity") {
 
     val buildDf = (r: Range) =>
       r.map(i => (i, toLetter(i), i * -1.0))
@@ -142,16 +142,16 @@ class DataFrameStatSuite extends SparkFunSuite  {
     val df3 = buildDf(11 to 100)
     val df4 = buildDf(1 to 50)
 
-    val err = 0.05
-    df2.stat.approxSimilarity(df3, err) should be (0.0)
-    df3.stat.approxSimilarity(df2, err) should be (0.0)
-    df1.stat.approxSimilarity(df2, err) should be < 0.25
-    df2.stat.approxSimilarity(df1, err) should be < 0.25
-    df1.stat.approxSimilarity(df4, err) should be (0.50 +- 0.125)
-    df4.stat.approxSimilarity(df1, err) should be (0.50 +- 0.125)
-    df1.stat.approxSimilarity(df3, err) should be > 0.75
-    df3.stat.approxSimilarity(df1, err) should be > 0.75
-    df1.stat.approxSimilarity(df1, err) should be (1.0)
+    val Err = 0.05
+    df2.stat.approxSimilarity(df3, Err) should be (0.0)
+    df3.stat.approxSimilarity(df2, Err) should be (0.0)
+    df1.stat.approxSimilarity(df2, Err) should be < 0.25
+    df2.stat.approxSimilarity(df1, Err) should be < 0.25
+    df1.stat.approxSimilarity(df4, Err) should be (0.50 +- 0.125)
+    df4.stat.approxSimilarity(df1, Err) should be (0.50 +- 0.125)
+    df1.stat.approxSimilarity(df3, Err) should be > 0.75
+    df3.stat.approxSimilarity(df1, Err) should be > 0.75
+    df1.stat.approxSimilarity(df1, Err) should be (1.0)
 
   }
 }
